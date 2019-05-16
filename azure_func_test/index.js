@@ -1,16 +1,17 @@
-module.exports = async function (context, req) {
-    context.log('JavaScript HTTP trigger function processed a request.');
+const axios = require('axios');
 
-    if (req.query.name || (req.body && req.body.name)) {
-        context.res = {
-            // status: 200, /* Defaults to 200 */
-            body: "Hello " + (req.query.name || req.body.name)
-        };
+module.exports = async function (context, req) {
+    try {
+        context.log('JavaScript HTTP trigger function processed a request.');
+
+        let hc = await axios.get('http://lais-core-app-hml.lasa.lojasamericanas.com.br')
+        context.res.status = 200;        
+        context.res.body = hc.data;
     }
-    else {
-        context.res = {
-            status: 400,
-            body: "Please pass a name on the query string or in the request body"
-        };
+    catch(err){
+        context.res.status = 400;
+        context.res.data = 'Falha no request'
     }
+        
+        
 };
